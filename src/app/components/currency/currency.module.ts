@@ -37,7 +37,8 @@ import {LocalServiceService} from "../../services/local-service.service";
     MatInputModule,
     MatIconModule,
     FormsModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule
   ],
   providers : [
     CurrencyServiceService, LocalServiceService

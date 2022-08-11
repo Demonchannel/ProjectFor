@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { LocalServiceService } from './../../../../services/local-service.service';
+import { CurrencyServiceService } from './../../../../services/currency-service.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { debounceTime, map, observable, Observable } from 'rxjs';
+
 
 @Component({
   selector: 'app-currency-calculations',
@@ -7,9 +11,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CurrencyCalculationsComponent implements OnInit {
   public value = '';
-  constructor() { }
 
-  ngOnInit(): void {
+  constructor(private CurrencyServiceService: CurrencyServiceService, private localStore: LocalServiceService) { }
+
+  ngOnInit() {
 
   }
 

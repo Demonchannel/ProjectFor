@@ -1,32 +1,53 @@
-<form class="example-form">
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>State</mat-label>
-    <input matInput
-           aria-label="State"
-           [matAutocomplete]="auto"
-           [formControl]="stateCtrl">
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates | async" [value]="state.name" >
-        <img class="example-option-img" aria-hidden [src]="state.flag" height="25">
-        <span>{{state.name}}</span> |
-        <small>Population: {{state.population}}</small>
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-</form>
-<form class="example-form">
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>State</mat-label>
-    <input matInput
-           aria-label="State"
-           [matAutocomplete]="auto"
-           [formControl]="stateCtrl">
-    <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let state of filteredStates | async" [value]="state.name" >
-        <img class="example-option-img" aria-hidden [src]="state.flag" height="25">
-        <span>{{state.name}}</span> |
-        <small>Population: {{state.population}}</small>
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-</form>
+<!--<form class="example-form">-->
+<!--  <mat-form-field class="example-full-width" appearance="fill">-->
+<!--    <mat-label>State</mat-label>-->
+<!--    <input matInput-->
+<!--           aria-label="State"-->
+<!--           [matAutocomplete]="auto">-->
+<!--    <mat-autocomplete #auto="matAutocomplete">-->
+<!--      <mat-option *ngFor="let cur of this.curArrayObj " [value]="cur" >-->
+<!--        <img class="example-option-img" aria-hidden [src]="cur.flag" height="25">-->
+<!--        <span>{{cur}}</span> |-->
+<!--        <small>Population: {{cur}}</small>-->
+<!--      </mat-option>-->
+<!--    </mat-autocomplete>-->
+<!--  </mat-form-field>-->
+<!--</form>-->
+<!--&lt;!&ndash;<form class="example-form">&ndash;&gt;-->
+<!--&lt;!&ndash;  <mat-form-field class="example-full-width" appearance="fill">&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-label>State</mat-label>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input matInput&ndash;&gt;-->
+<!--&lt;!&ndash;           aria-label="State"&ndash;&gt;-->
+<!--&lt;!&ndash;           [matAutocomplete]="auto"&ndash;&gt;-->
+<!--&lt;!&ndash;           [formControl]="stateCtrl">&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-autocomplete #auto="matAutocomplete">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-option *ngFor="let state of filteredStates | async" [value]="state.name" >&ndash;&gt;-->
+<!--&lt;!&ndash;        <img class="example-option-img" aria-hidden [src]="state.flag" height="25">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span>{{state.name}}</span> |&ndash;&gt;-->
+<!--&lt;!&ndash;        <small>Population: {{state.population}}</small>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-option>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-autocomplete>&ndash;&gt;-->
+<!--&lt;!&ndash;  </mat-form-field>&ndash;&gt;-->
+<!--&lt;!&ndash;</form>&ndash;&gt;-->
+<!--&lt;!&ndash;<select class="exampleOfSelect">&ndash;&gt;-->
+<!--&lt;!&ndash;  <option *ngFor="curArrayObj of curObjects | keyvalue">&ndash;&gt;-->
+<!--&lt;!&ndash;  </option>&ndash;&gt;-->
+<!--&lt;!&ndash;</select>&ndash;&gt;-->
+<select class="exampleOfSelect" id="firstSelect">
+  // Селекты надо переделать на выше указанные инпуты с автоподстановкой, Почему, тк там изображены инпуты с доп кнопками, оформленные под select
+  <option *ngFor="let key  of keys">
+    {{key.key}} {{key.value}}
+</option>
+// Починил хорошо
+</select>
+<select class="exampleOfSelect" id="secondSelect">
+  <option *ngFor="let key  of keys">
+    <img src='{{getFlag(key.key)}}'> {{key.key}} {{key.value}}
+    // getFlag не будет здесь работать в него прилетает null/underfined
+</option>
+</select>
+
+<input id="firstInput" class="firstInput" type="text">
+// Данные вытащишь будешь проецировать через [value] не предумывай каши. Попробуй сделать поток через Async/ вечером помогу, если не получится
+<input id="secondInput" class="secondInput" type="text">
+

@@ -1,58 +1,79 @@
-import { Component, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged, EMPTY,
-  filter,
-  fromEvent,
-  mergeMap,
-  Observable, Subscription,
-  switchMap,
-  tap
-} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {ajax} from "rxjs/ajax";
+import {distinctUntilChanged, observable, Observable} from 'rxjs';
+import { Component, OnInit, Output } from '@angular/core';
 import {CurrencyServiceService} from "../../../../services/currency-service.service";
-import {currencyObject} from "../../../../models/currency";
 import {LocalServiceService} from "../../../../services/local-service.service";
-
-export interface State {
-  flag: string;
-  name: string;
-  population: string;
-}
-
+import { debounceTime, fromEvent, map } from 'rxjs';
 @Component({
   selector: 'app-currency-forms',
-  templateUrl: './currency-forms.component.html',
+  templateUrl: 'currency-forms.component.html',
   styleUrls: ['./currency-forms.component.css']
 })
 export class CurrencyFormsComponent implements OnInit{
-  // private subs: Subscription;
-  stateCtrl = new FormControl('');
-  filteredStates: Observable<State[]>;
-  states: State[] = [];
-  curDate: any
+  curDate: any;
+  curObjects:any = [];
+  curArrayObj:any;
+  trs: any;
+  str: any;
+  keys: Array<any> = [];
 
   constructor( private CurrencyServiceService: CurrencyServiceService, private localStore: LocalServiceService) {
-    this.filteredStates = this.stateCtrl.valueChanges.pipe(
-      startWith(''),
-      map(state => (state ? this._filterStates(state) : this.states.slice())),
-    );
+
   }
 
   ngOnInit(){
-    this.CurrencyServiceService.getCurrencyList()
-    this.curDate = this.CurrencyServiceService.data
-    console.log(this.curDate)
-    }
-
-  private _filterStates(value: string): State[] {
-    const filterValue = value.toLowerCase();
-
-    return this.states.filter(state => state.name.toLowerCase().includes(filterValue));
+    this.getServiceList()
+    this.calculation()
   }
 
+  getServiceList(){
+    this.CurrencyServiceService.getCurrencyList().subscribe((res)=>{
+      let inspect = JSON.stringify(res);
+      this.str = JSON.parse(inspect);
+      for (let key in this.str.currencies){
+        this.keys.push({key:key, value: this.str.currencies[key]});
+      }
+      //Можно по другому, но пока хорошо
+      console.log(this.keys);
+      return this.keys;
+    })
+      }
 
+    calculation(){
+      const calculation$ =
+      // fromEvent(document.getElementById('firstInput'),'input')
+       new Observable<Event>(observable=> {
+        //Переделал хорошо
+        const firstInput: HTMLElement | null = document.getElementById('firstInput')
+        const secondInput: HTMLElement | null = document.getElementById('secondInput')
+        firstInput?.addEventListener('input', event => {
+          observable.next(event)
+        })
+        secondInput?.addEventListener('input', event => {
+          observable.next(event)
+        })
+      }
+        )
+        calculation$.pipe(
+          map(event=>{
+            return (event.target as HTMLInputElement).value
+          }),
+          debounceTime(1000),
+          distinctUntilChanged()).subscribe(
+            value => console.log(value)
+          )
+          // Здесь value хорошо, но проще сделать и от него прыгать
+          // Сделай в сервисе дополнительный метод, для convert. Чтобы он принимал значение из компонента и одновременно в 2 инпута
+    }
+
+    // calculation$.pipe(
+    //   map(event=>{
+    //     return (event.target as HTMLInputElement).value
+    //   }),
+    //   debounceTime(1000)).subscribe
+
+
+  getFlag(key: string){
+    this.CurrencyServiceService.getFlag(key.slice(0, -1))
+  }
+  //Зачем тут splice? Попробуй по другому
 }

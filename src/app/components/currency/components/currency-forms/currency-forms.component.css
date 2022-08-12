@@ -26,3 +26,7 @@ select.exampleOfSelect{
 select.exampleOfSelect{
   width: 400px;
 }
+img#arrow{
+  height: 75px;
+  width: 75px;
+}

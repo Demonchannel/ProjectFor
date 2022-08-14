@@ -1,8 +1,9 @@
-import {distinctUntilChanged, observable, Observable} from 'rxjs';
+import {distinctUntilChanged, observable, Observable, switchMap} from 'rxjs';
 import { Component, OnInit, Output } from '@angular/core';
 import {CurrencyServiceService} from "../../../../services/currency-service.service";
 import {LocalServiceService} from "../../../../services/local-service.service";
 import { debounceTime, fromEvent, map } from 'rxjs';
+import {ajax} from "rxjs/ajax";
 @Component({
   selector: 'app-currency-forms',
   templateUrl: 'currency-forms.component.html',
@@ -15,6 +16,10 @@ export class CurrencyFormsComponent implements OnInit{
   trs: any;
   str: any;
   keys: Array<any> = [];
+  currencyFirst : string | undefined;
+  currencySecond: string | undefined;
+  firstInp = document.getElementById('firstInput')
+  secondInp = document.getElementById('secondInput')
 
   constructor( private CurrencyServiceService: CurrencyServiceService, private localStore: LocalServiceService) {
 
@@ -22,82 +27,98 @@ export class CurrencyFormsComponent implements OnInit{
 
   ngOnInit(){
     this.getServiceList()
-    this.calculation()
+    // this.calculation()
   }
 
   getServiceList(){
-    this.CurrencyServiceService.getCurrencyList().pipe(
-      distinctUntilChanged()
+   this.CurrencyServiceService.getCurrencyList().pipe(
+      distinctUntilChanged(),
     ).subscribe((res)=>{
       let inspect = JSON.stringify(res);
       this.str = JSON.parse(inspect);
       for (let key in this.str.currencies){
         this.keys.push({key:key, value: this.str.currencies[key]});
       }
-      //Можно по другому, но пока хорошо
       return this.keys;
+
     })
 
       }
 
-    calculation(){
-      const calculationFirst$ = new Observable<Event>(observable=> {
-          const firstInput: HTMLElement | null = document.getElementById('firstInput')
-          firstInput?.addEventListener('input', event => {
-            observable.next(event)
-          })
-        }
-      )
-      calculationFirst$.pipe(
-        map(event=>{
-          return (event.target as HTMLInputElement).value
-        }),
-        debounceTime(1000),
-        distinctUntilChanged()).subscribe(
-        value => console.log(value)
-      )
-      const calculationSecond$ = new Observable<Event>(observable=> {
-          const secondInput: HTMLElement | null = document.getElementById('secondInput')
-          secondInput?.addEventListener('input', event => {
-            observable.next(event)
-          })
-        }
-      )
-      calculationSecond$.pipe(
-        map(event=>{
-          return (event.target as HTMLInputElement).value
-        }),
-        debounceTime(1000),
-        distinctUntilChanged()).subscribe(
-        value => console.log(value)
-      )
-      // const calcFirst$:Observable<Event> = fromEvent<Event>(document.getElementById("firstInput"), 'input')
-      // calcFirst$.pipe(
-      //   debounceTime(1000),
-      //   distinctUntilChanged()).subscribe(x=>console.log(x))
-      // const calcSecond$:Observable<Event> = fromEvent<Event>(document.getElementById("secondInput"), 'input')
-      // calcSecond$.pipe(
-      //   debounceTime(1000),
-      //   distinctUntilChanged()).subscribe(x=>console.log(x))
+      consoleF(key:any, key2:any){
+      console.log(key,typeof (key),key2, typeof (key2))
+      }
 
+      IflSkey(){
+     localStorage.length != 0
+      }
 
-          // Здесь value хорошо, но проще сделать и от него прыгать
-          // Сделай в сервисе дополнительный метод, для convert. Чтобы он принимал значение из компонента и одновременно в 2 инпута
+    calculation(firstEl:any ,secondEl:any, amount:any ){
+    // fromEvent(this.firstInp, 'input')
+    this.CurrencyServiceService.getCurrencyConvert(firstEl,secondEl,amount)
     }
 
-    // calculation$.pipe(
-    //   map(event=>{
-    //     return (event.target as HTMLInputElement).value
-    //   }),
-    //   debounceTime(1000)).subscribe
-
-
   getFlag(key: string){
-    this.CurrencyServiceService.getFlag(key.slice(0, -1))
+      key =  key.slice(0, -1)
+    return this.CurrencyServiceService.urlFlags + key
   }
+
+  ngDoCheck(){
+    console.log('fucking shit')
+  }
+  // getFlagOpt(key:string){
+  //  let img =document.createElement("img")
+  //   let src = this.getFlag(key)
+  //   img.setAttribute('src', `${{ src }}`)
+  //   console.log(img,typeof (img))
+  //   return img
+  // }
 
   caclConvert(from: string, to: string, amount: string){
     this.CurrencyServiceService.getCurrencyConvert(from,to,amount)
   }
-  //Зачем тут splice? Попробуй по другому
+
+  localStoreDo(key:string, value:string){
+    this.localStore.saveData(key , value)
+  }
+
+  klass(){
+    console.log('wtf')
+  }
+
+  ngOnDestroy(){
+    this.localStore.clearData()
+  }
 }
+//    calculeate()
+// const calculationFirst$ = new Observable<Event>(observable=> {
+//     const firstInput: HTMLElement | null = document.getElementById('firstInput')
+//     firstInput?.addEventListener('input', event => {
+//       observable.next(event)
+//     })
+//   }
+// )
+// calculationFirst$.pipe(
+//   map(event=>{
+//     return (event.target as HTMLInputElement).value
+//   }),
+//   debounceTime(1000),
+//   distinctUntilChanged()).subscribe(
+//   value => console.log(value)
+// )
+// const calculationSecond$ = new Observable<Event>(observable=> {
+//     const secondInput: HTMLElement | null = document.getElementById('secondInput')
+//     secondInput?.addEventListener('input', event => {
+//       observable.next(event)
+//     })
+//   }
+// )
+// calculationSecond$.pipe(
+//   map(event=>{
+//     return (event.target as HTMLInputElement).value
+//   }),
+//   debounceTime(1000),
+//   distinctUntilChanged()).subscribe(
+//   value =>{
+//     // this.CurrencyServiceService.getCurrencyConvert(document.getElementById('selectOne'), document.getElementById('selectTwo'), value)
+//   })

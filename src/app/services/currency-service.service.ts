@@ -22,9 +22,9 @@ export class CurrencyServiceService {
     // Хорошо, переписал
   }
 
-  getFlag(flag: string) {
-    return this.http.get(this.urlFlags + flag)
-  }
+  // getFlag(flag: string) {
+  //   return this.http.get(this.urlFlags + flag)
+  // }
 
   getCurrencyConvert(from: string, to: string, amount: string) {
     return this.http.get(this.API_BASIC_URL + '/convert' + `?api_key=${this.apiKeyCurrency}` + `&from=${from} &to=${to}

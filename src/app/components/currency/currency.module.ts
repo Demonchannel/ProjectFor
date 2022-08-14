@@ -15,6 +15,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {CurrencyServiceService} from "../../services/currency-service.service";
 import {LocalServiceService} from "../../services/local-service.service";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 
 @NgModule({
@@ -26,20 +28,22 @@ import {LocalServiceService} from "../../services/local-service.service";
   exports: [
     CurrencyComponent
   ],
-  imports: [
-    CommonModule,
-    BrowserAnimationsModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-    MatSlideToggleModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    FormsModule,
-    MatButtonModule,
-    CommonModule
-  ],
+    imports: [
+        CommonModule,
+        BrowserAnimationsModule,
+        MatSelectModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        FormsModule,
+        MatButtonModule,
+        CommonModule,
+        MatDatepickerModule,
+      MatNativeDateModule
+    ],
   providers : [
     CurrencyServiceService, LocalServiceService
   ]

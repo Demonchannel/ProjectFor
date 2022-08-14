@@ -2,10 +2,10 @@
   <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>State</mat-label>
     <input matInput
-           aria-label="State"
-           [matAutocomplete]="auto">
+           [matAutocomplete]="auto"
+    id="selectOne">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let key  of keys " [value]="key" >
+      <mat-option *ngFor="let key  of keys " [value]="key.key + ' ' + key.value" (click)="localStoreDo(key.key, key.value)" >
         <img class="example-option-img" aria-hidden [src]="getFlag(key.key)" height="25">
         <span>{{key.key}}</span> |
         <small>{{key.value}}</small>
@@ -17,10 +17,12 @@
   <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>State</mat-label>
     <input matInput
-           [matAutocomplete]="auto">
+           [matAutocomplete]="auto"
+           id="selectTwo"
+           (input)="klass()">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let key  of keys " [value]="key.key" >
-        <img class="example-option-img" aria-hidden [src]="getFlag(key.key.slice(0, -1))" height="25">
+      <mat-option *ngFor="let key  of keys " [value]="key.key" (click)="consoleF(key.key, key.value)"   >
+        <img class="example-option-img" aria-hidden [src]="getFlag(key.key)" height="25">
         <span>{{key.key}}</span> |
         <small>{{key.value}}</small>
       </mat-option>
@@ -28,16 +30,6 @@
   </mat-form-field>
 </form>
 
-<!--<select class="exampleOfSelect" id="firstSelect">-->
-<!--  <option *ngFor="let key  of keys">-->
-<!--    {{key.key}} {{key.value}}-->
-<!--</option>-->
-<!--</select>-->
-<!--<select class="exampleOfSelect" id="secondSelect">-->
-<!--  <option *ngFor="let key  of keys">-->
-<!--    <img src='{{getFlag(key.key)}}'> {{key.key}} {{key.value}}-->
-<!--</option>-->
-<!--</select>-->
 
 <input id="firstInput" class="firstInput" type="text" >
 <img src="assets/Arrows.svg" id="arrow">

@@ -26,14 +26,15 @@ export class CurrencyServiceService {
   //   return this.http.get(this.urlFlags + flag)
   // }
 
-  getCurrencyConvert(from: string, to: string, amount: string) {
+    getCurrencyConvert(from: string, to: string, amount: string) {
     return this.http.get(this.API_BASIC_URL + '/convert' + `?api_key=${this.apiKeyCurrency}` + `&from=${from} &to=${to}
      &amount=${amount}` + '&format=json')
 // Можешь сделать только через конверт, но данные вытащить проще с list.
   }
 
-  getCurrencyHistorical() {
-    return this.http.get(this.API_BASIC_URL + '/historical/')
+  getCurrencyHistorical(from: string | undefined, to: string | undefined, amount: string | undefined, date: string) {
+    return this.http.get(this.API_BASIC_URL + '/convert' + `?api_key=${this.apiKeyCurrency}` + `&from=${from} &to=${to}
+     &amount=${amount}` + '&format=json' + '/historical/' + date)
   // Для этого используешь 2-ой пустой компонент
   }
 

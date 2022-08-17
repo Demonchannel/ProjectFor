@@ -4,6 +4,7 @@ import {CurrencyServiceService} from "../../../../services/currency-service.serv
 import {LocalServiceService} from "../../../../services/local-service.service";
 import { debounceTime, fromEvent, map } from 'rxjs';
 import {ajax} from "rxjs/ajax";
+import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 @Component({
   selector: 'app-currency-forms',
   templateUrl: 'currency-forms.component.html',
@@ -18,17 +19,44 @@ export class CurrencyFormsComponent implements OnInit{
   keys: Array<any> = [];
   currencyFirst : string | undefined;
   currencySecond: string | undefined;
-  firstInp = document.getElementById('firstInput')
-  secondInp = document.getElementById('secondInput')
+  currencyInpSlcFirst: string | undefined
+  currencyInpSlcSecond : string | undefined
+  firstOpt : string | undefined;
+  secondOpt : string | undefined;
+  dateInp: HTMLElement | null = document.getElementById('datePicker')
+  events: string[] = [];
+  date = new Date()
+  newDate: any
+
 
   constructor( private CurrencyServiceService: CurrencyServiceService, private localStore: LocalServiceService) {
 
   }
 
   ngOnInit(){
+    this.localStore.clearData()
     this.getServiceList()
-    // this.calculation()
+    this.dateToday()
+    const convertation$ = this.CurrencyServiceService.getCurrencyHistorical( this.firstOpt,this.secondOpt ,this.currencyFirst  ,this.newDate )
   }
+
+  dateToday(){
+    this.newDate = `${this.date.getMonth() + 1}-${this.date.getDate()}-${this.date.getFullYear()}`
+    return this.newDate
+  }
+
+  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.events.push(`${event.value}`);
+    this.date = new Date(this.events[this.events.length - 1])
+    this.newDate = `${this.date.getFullYear()}-${this.date.getMonth() + 1}-${this.date.getDate()}`
+    console.log(`this is new date :  ${this.newDate}`)
+    return this.newDate
+  }
+  getDateApi(){
+
+  }
+
+
 
   getServiceList(){
    this.CurrencyServiceService.getCurrencyList().pipe(
@@ -40,14 +68,9 @@ export class CurrencyFormsComponent implements OnInit{
         this.keys.push({key:key, value: this.str.currencies[key]});
       }
       return this.keys;
-
     })
-
       }
 
-      consoleF(key:any, key2:any){
-      console.log(key,typeof (key),key2, typeof (key2))
-      }
 
       IflSkey(){
      localStorage.length != 0
@@ -64,61 +87,21 @@ export class CurrencyFormsComponent implements OnInit{
   }
 
   ngDoCheck(){
-    console.log('fucking shit')
-  }
-  // getFlagOpt(key:string){
-  //  let img =document.createElement("img")
-  //   let src = this.getFlag(key)
-  //   img.setAttribute('src', `${{ src }}`)
-  //   console.log(img,typeof (img))
-  //   return img
-  // }
-
-  caclConvert(from: string, to: string, amount: string){
-    this.CurrencyServiceService.getCurrencyConvert(from,to,amount)
+console.log('nononononoono')
   }
 
-  localStoreDo(key:string, value:string){
+  localStoreDo(key:string, value:string,tF:boolean){
     this.localStore.saveData(key , value)
+    if(tF){
+      this.currencyInpSlcFirst = key
+    } else {
+      this.currencyInpSlcSecond = key
+    }
   }
 
-  klass(){
-    console.log('wtf')
-  }
 
   ngOnDestroy(){
     this.localStore.clearData()
   }
 }
-//    calculeate()
-// const calculationFirst$ = new Observable<Event>(observable=> {
-//     const firstInput: HTMLElement | null = document.getElementById('firstInput')
-//     firstInput?.addEventListener('input', event => {
-//       observable.next(event)
-//     })
-//   }
-// )
-// calculationFirst$.pipe(
-//   map(event=>{
-//     return (event.target as HTMLInputElement).value
-//   }),
-//   debounceTime(1000),
-//   distinctUntilChanged()).subscribe(
-//   value => console.log(value)
-// )
-// const calculationSecond$ = new Observable<Event>(observable=> {
-//     const secondInput: HTMLElement | null = document.getElementById('secondInput')
-//     secondInput?.addEventListener('input', event => {
-//       observable.next(event)
-//     })
-//   }
-// )
-// calculationSecond$.pipe(
-//   map(event=>{
-//     return (event.target as HTMLInputElement).value
-//   }),
-//   debounceTime(1000),
-//   distinctUntilChanged()).subscribe(
-//   value =>{
-//     // this.CurrencyServiceService.getCurrencyConvert(document.getElementById('selectOne'), document.getElementById('selectTwo'), value)
-//   })
+

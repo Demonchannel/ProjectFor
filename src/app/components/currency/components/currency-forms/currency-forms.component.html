@@ -1,27 +1,25 @@
 <form class="example-form">
   <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>State</mat-label>
     <input matInput
            [matAutocomplete]="auto"
     id="selectOne">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let key  of keys " [value]="key.key + ' ' + key.value" (click)="localStoreDo(key.key, key.value)" >
+      <mat-option *ngFor="let key  of keys " [value]="key.key + ' ' + key.value"  (click)="localStoreDo(key.key, key.key, true)" >
         <img class="example-option-img" aria-hidden [src]="getFlag(key.key)" height="25">
         <span>{{key.key}}</span> |
-        <small>{{key.value}}</small>
+       <small>{{key.value}}</small>
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
 </form>
 <form class="example-form">
   <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>State</mat-label>
     <input matInput
            [matAutocomplete]="auto"
            id="selectTwo"
-           (input)="klass()">
+          >
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let key  of keys " [value]="key.key" (click)="consoleF(key.key, key.value)"   >
+      <mat-option *ngFor="let key  of keys " [value]="key.key"  (click)="localStoreDo(key.key, key.key, false)"   >
         <img class="example-option-img" aria-hidden [src]="getFlag(key.key)" height="25">
         <span>{{key.key}}</span> |
         <small>{{key.value}}</small>
@@ -30,8 +28,14 @@
   </mat-form-field>
 </form>
 
-
-<input id="firstInput" class="firstInput" type="text" >
+<input id="firstInput" class="firstInput" type="text" [(ngModel)]="currencyFirst">
 <img src="assets/Arrows.svg" id="arrow">
-<input id="secondInput" class="secondInput" type="text">
+<input id="secondInput" class="secondInput" type="text" [(ngModel)]="currencySecond">
+
+<mat-form-field appearance="fill">
+  <mat-label>Choose a date</mat-label>
+  <input matInput [matDatepicker]="picker" id="datePicker" (dateChange)="addEvent('change', $event)" [value]="newDate">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
 
